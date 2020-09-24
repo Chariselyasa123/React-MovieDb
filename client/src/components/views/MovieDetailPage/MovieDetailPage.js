@@ -4,6 +4,8 @@ import Mainimage from '../LandingPage/Section/Mainimage'
 import { Button, Descriptions, Row } from 'antd'
 import GridCard from '../LandingPage/Section/GridCard'
 import Favorite from './Sections/Favorite'
+import Comments from './Sections/Comments'
+import Axios from 'axios'
 
 function MovieDetailPage(p) {
 
@@ -11,23 +13,40 @@ function MovieDetailPage(p) {
     const [Crews, setCrews] = useState([])
     const [ActorTogle, setActorTogle] = useState(true)
     const [Text, setText] = useState("")
+    const [CommentList, setCommentList] = useState([])
     const movieId = p.match.params.movieId
+    const movieVariable = {
+        movieId: movieId
+    }
+
 
     useEffect(() => {
 
         fetch(`${API_URL}movie/${movieId}?api_key=${API_KEY}&language=en-US`)
             .then(response => response.json())
             .then(response => {
-                // console.log(response)
+                console.log(response)
                 setMovie(response)
 
                 fetch(`${API_URL}movie/${movieId}/credits?api_key=${API_KEY}`)
                     .then(response => response.json())
                     .then(response => {
-                        console.log(response);
+                        // console.log(response);
                         setCrews(response.cast)
                     })
             })
+        
+        Axios.post('/api/comment/getComments', movieVariable)
+            .then(response => {
+                console.log(response)
+                if (response.data.success) {
+                    // console.log('response.data.comments', response.data.comments)
+                    setCommentList(response.data.comments)
+                } else {
+                    alert('Failed to get comments Info')
+                }
+            })
+
         handleClick()
     }, [])
 
@@ -38,6 +57,10 @@ function MovieDetailPage(p) {
         }else{
             setText("Show Actor's")
         }
+    }
+
+    const updateComment = (newComment) => {
+        setCommentList(CommentList.concat(newComment))
     }
 
     return (
@@ -92,6 +115,8 @@ function MovieDetailPage(p) {
                         ))}
                     </Row>
                 }
+
+                <Comments CommentList={CommentList} postId={movieId} refreshFunction={updateComment}/>
             </div>
 
 
