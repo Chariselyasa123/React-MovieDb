@@ -28,24 +28,10 @@ function MovieDetailPage(p) {
 
         let endpointForMovieInfo = `${API_URL}movie/${movieId}?api_key=${API_KEY}&language=en-US`;
         fetchDetailInfo(endpointForMovieInfo)
-
-        // fetch(`${API_URL}movie/${movieId}?api_key=${API_KEY}&language=en-US`)
-        //     .then(response => response.json())
-        //     .then(response => {
-        //         console.log(response)
-        //         setMovie(response)
-
-        //         fetch(`${API_URL}movie/${movieId}/credits?api_key=${API_KEY}`)
-        //             .then(response => response.json())
-        //             .then(response => {
-        //                 // console.log(response);
-        //                 setCrews(response.cast)
-        //             })
-        //     })
         
         Axios.post('/api/comment/getComments', movieVariable)
             .then(response => {
-                console.log(response)
+                // console.log(response)
                 if (response.data.success) {
                     // console.log('response.data.comments', response.data.comments)
                     setCommentList(response.data.comments)
@@ -62,7 +48,7 @@ function MovieDetailPage(p) {
         fetch(endpoint)
             .then(result => result.json())
             .then(result => {
-                console.log(result)
+                // console.log(result)
                 setMovie(result)
                 setLoadingForMovie(false)
 
@@ -70,7 +56,7 @@ function MovieDetailPage(p) {
                 fetch(endpointForCasts)
                     .then(result => result.json())
                     .then(result => {
-                        console.log(result)
+                        // console.log(result)
                         setCrews(result.cast)
                     })
 

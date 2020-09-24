@@ -1,5 +1,6 @@
 import React from 'react'
 import { Typography } from 'antd'
+import { StarFilled } from '@ant-design/icons'
 
 const { Title } = Typography
 
@@ -13,8 +14,8 @@ function Mainimage(props) {
             position: 'relative'
         }}>
             <div>
-                <div style={{ position: 'absolute',maxWidth: '500px',bottom: '2rem',marginLeft: '2rem'}}>
-                    <Title style={{ color: 'white' }} level={2} >{props.title}</Title>
+                <div style={{ position: 'absolute',maxWidth: '500px',bottom: '2rem',marginLeft: '2rem' }}>
+                    <Title style={{ color: 'white' }} level={2} >{props.title} <StarFilled style={{ color: 'yellow' }}/> {props.rating}</Title>
                     <p style={{ color: 'white', fontSize: '1rem' }}>{props.text}</p>
                 </div>
             </div>
