@@ -3,6 +3,7 @@ import { Comment, Avatar, Button, Input } from 'antd'
 import TextArea from 'antd/lib/input/TextArea'
 import { useSelector } from 'react-redux'
 import Axios from 'axios'
+import LikeDislike from './LikeDislike'
 
 function SinggleComment(p) {
 
@@ -42,7 +43,10 @@ function SinggleComment(p) {
     }
 
     const action = [
-        <span onClick={openReply} key="comment-basic-reply-to">Reply to</span>
+        <>
+            <LikeDislike comment commentId={p.comment._id} userId={localStorage.getItem('userId')}/>
+            <span onClick={openReply} key="comment-basic-reply-to">Reply to</span>
+        </>
     ];
 
     return (

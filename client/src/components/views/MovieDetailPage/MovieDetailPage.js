@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { API_URL, API_KEY, IMAGE_URL } from '../../Config'
 import Mainimage from '../LandingPage/Section/Mainimage'
-import { Button, Descriptions, Row } from 'antd'
+import { Button, Descriptions, Row, Col } from 'antd'
 import GridCard from '../LandingPage/Section/GridCard'
 import Favorite from './Sections/Favorite'
 import Comments from './Sections/Comments'
 import Axios from 'axios'
+import LikeDislike from './Sections/LikeDislike'
 
 function MovieDetailPage(p) {
 
@@ -76,9 +77,16 @@ function MovieDetailPage(p) {
 
             {/* BODY */}
             <div style={{ width: '85%', margin: '1rem auto' }}>
-                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <Favorite userFrom={localStorage.getItem('userId')} movieId={movieId} movieInfo={Movie}/>
-                </div>
+                <Row>
+                    <Col span={8}> 
+                    
+                        <LikeDislike movie movieId={movieId} userId={localStorage.getItem('userId')} styleMovie={{ paddingRight: '1rem' }}/> 
+                    
+                    </Col>
+                    <Col span={8} offset={8} style={{ display: 'flex', justifyContent: 'flex-end' }}  styleMovie={{ paddingRight: '1rem' }}>
+                        <Favorite userFrom={localStorage.getItem('userId')} movieId={movieId} movieInfo={Movie}/>
+                    </Col>
+                </Row>
 
                 {/* Info film dalam table */}
                 <Descriptions title="Movie Info" bordered>
