@@ -10,20 +10,19 @@ function FavoritePage() {
     const [FavoriteMovie, setFavoriteMovie] = useState([])
 
     useEffect(() => {
-
         fetchFavoriteMovies()
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-
+    
     const fetchFavoriteMovies = () => {
         Axios.post('/api/favorite/getFavoriteMovie', variables)
-            .then(response=>{
-                if(response.data.success) {
-                    setFavoriteMovie(response.data.favorites)
-                }else{
-                    alert('Filed to get favorited videos')
-                }
-            })
+        .then(response=>{
+            if(response.data.success) {
+                setFavoriteMovie(response.data.favorites)
+            }else{
+                alert('Filed to get favorited videos')
+            }
+        })
     }
 
     const onClickRemove = (id) => {
@@ -67,7 +66,7 @@ function FavoritePage() {
 
     return (
         <div style={{ width: '85%', margin: '3rem auto' }}>
-            <h1>Film Favorite Saya 🎬</h1>
+            <h1>Film Favorite Saya <span role="img" aria-label="Emoji Film">🎬</span></h1>
             <hr/>
             <table>
                 <thead>

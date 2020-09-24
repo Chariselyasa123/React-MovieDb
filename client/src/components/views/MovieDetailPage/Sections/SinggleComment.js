@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Comment, Avatar, Button, Input } from 'antd'
+import { Comment, Avatar, Button } from 'antd'
 import TextArea from 'antd/lib/input/TextArea'
 import { useSelector } from 'react-redux'
 import Axios from 'axios'
@@ -57,7 +57,7 @@ function SinggleComment(p) {
                 avatar={
                     <Avatar
                         src={p.comment.writer.image}
-                        alt
+                        alt="image"
                     />
                 }
                 content={

@@ -7,6 +7,7 @@ import Favorite from './Sections/Favorite'
 import Comments from './Sections/Comments'
 import Axios from 'axios'
 import LikeDislike from './Sections/LikeDislike'
+import MovieInfo from './Sections/MovieInfo'
 
 function MovieDetailPage(p) {
 
@@ -15,6 +16,8 @@ function MovieDetailPage(p) {
     const [ActorTogle, setActorTogle] = useState(true)
     const [Text, setText] = useState("")
     const [CommentList, setCommentList] = useState([])
+    const [LoadingForMovie, setLoadingForMovie] = useState(true)
+    const [LoadingForCasts, setLoadingForCasts] = useState(true)
     const movieId = p.match.params.movieId
     const movieVariable = {
         movieId: movieId
@@ -23,19 +26,22 @@ function MovieDetailPage(p) {
 
     useEffect(() => {
 
-        fetch(`${API_URL}movie/${movieId}?api_key=${API_KEY}&language=en-US`)
-            .then(response => response.json())
-            .then(response => {
-                console.log(response)
-                setMovie(response)
+        let endpointForMovieInfo = `${API_URL}movie/${movieId}?api_key=${API_KEY}&language=en-US`;
+        fetchDetailInfo(endpointForMovieInfo)
 
-                fetch(`${API_URL}movie/${movieId}/credits?api_key=${API_KEY}`)
-                    .then(response => response.json())
-                    .then(response => {
-                        // console.log(response);
-                        setCrews(response.cast)
-                    })
-            })
+        // fetch(`${API_URL}movie/${movieId}?api_key=${API_KEY}&language=en-US`)
+        //     .then(response => response.json())
+        //     .then(response => {
+        //         console.log(response)
+        //         setMovie(response)
+
+        //         fetch(`${API_URL}movie/${movieId}/credits?api_key=${API_KEY}`)
+        //             .then(response => response.json())
+        //             .then(response => {
+        //                 // console.log(response);
+        //                 setCrews(response.cast)
+        //             })
+        //     })
         
         Axios.post('/api/comment/getComments', movieVariable)
             .then(response => {
@@ -50,6 +56,29 @@ function MovieDetailPage(p) {
 
         handleClick()
     }, [])
+
+    const fetchDetailInfo = (endpoint) => {
+
+        fetch(endpoint)
+            .then(result => result.json())
+            .then(result => {
+                console.log(result)
+                setMovie(result)
+                setLoadingForMovie(false)
+
+                let endpointForCasts = `${API_URL}movie/${movieId}/credits?api_key=${API_KEY}`;
+                fetch(endpointForCasts)
+                    .then(result => result.json())
+                    .then(result => {
+                        console.log(result)
+                        setCrews(result.cast)
+                    })
+
+                setLoadingForCasts(false)
+            })
+            .catch(error => console.error('Error:', error)
+            )
+    }
 
     const handleClick = () => {
         setActorTogle(!ActorTogle)
@@ -67,12 +96,14 @@ function MovieDetailPage(p) {
     return (
         <div>
             {/* Gambar utama */}
-            {Movie && 
+            {!LoadingForMovie ?
                 <Mainimage 
                     image={`${IMAGE_URL}w1280${Movie.backdrop_path}`} 
                     title={Movie.original_title}
                     text={Movie.overview}
                 />
+                :
+                <div>loading...</div>
             }
 
             {/* BODY */}
@@ -83,22 +114,17 @@ function MovieDetailPage(p) {
                         <LikeDislike movie movieId={movieId} userId={localStorage.getItem('userId')} styleMovie={{ paddingRight: '1rem' }}/> 
                     
                     </Col>
-                    <Col span={8} offset={8} style={{ display: 'flex', justifyContent: 'flex-end' }}  styleMovie={{ paddingRight: '1rem' }}>
+                    <Col span={8} offset={8} style={{ display: 'flex', justifyContent: 'flex-end' }}>
                         <Favorite userFrom={localStorage.getItem('userId')} movieId={movieId} movieInfo={Movie}/>
                     </Col>
                 </Row>
 
                 {/* Info film dalam table */}
-                <Descriptions title="Movie Info" bordered>
-                    <Descriptions.Item label="Title">{Movie.original_title}</Descriptions.Item>
-                    <Descriptions.Item label="Release Date">{Movie.release_date}</Descriptions.Item>
-                    <Descriptions.Item label="Revenue">{Movie.revenue}</Descriptions.Item>
-                    <Descriptions.Item label="Runtime">{Movie.runtime}</Descriptions.Item>
-                    <Descriptions.Item label="Vote Average">{Movie.vote_average}</Descriptions.Item>
-                    <Descriptions.Item label="Vote Vount">{Movie.vote_count}</Descriptions.Item>
-                    <Descriptions.Item label="Status">{Movie.status}</Descriptions.Item>
-                    <Descriptions.Item label="Popularity">{Movie.popularity}</Descriptions.Item>
-                </Descriptions>
+                {!LoadingForMovie ?
+                    <MovieInfo movie={Movie} />
+                    :
+                    <div>loading...</div>
+                }
 
                 <br/>
                 <div style={{ display: 'flex', justifyContent: 'center' }}>

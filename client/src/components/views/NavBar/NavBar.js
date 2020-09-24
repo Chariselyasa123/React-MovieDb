@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import LeftMenu from './Sections/LeftMenu';
 import RightMenu from './Sections/RightMenu';
 import { Drawer, Button } from 'antd';
-import { MoreOutlined, VideoCameraTwoTone } from '@ant-design/icons';
+import { MenuUnfoldOutlined, VideoCameraTwoTone } from '@ant-design/icons';
 import './Sections/Navbar.css';
 
 function NavBar() {
@@ -33,7 +33,7 @@ function NavBar() {
           type="primary"
           onClick={showDrawer}
         >
-          <MoreOutlined />
+          <MenuUnfoldOutlined />
         </Button>
         <Drawer
           title="Basic Drawer"

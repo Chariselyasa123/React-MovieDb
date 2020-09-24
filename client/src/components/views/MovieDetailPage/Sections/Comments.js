@@ -44,9 +44,9 @@ function Comments(p) {
             { p.CommentList && p.CommentList.map((comment, index) => (
                 
                 (!comment.responseTo &&
-                    <React.Fragment>
-                        <SinggleComment comment={comment} postId={p.postId} refreshFunction={p.refreshFunction}/>
-                        <ReplyComment CommentList={p.CommentList} parentCommentId={comment._id} postId={p.postId} refreshFunction={p.refreshFunction}/>
+                    <React.Fragment key={index}>
+                            <SinggleComment comment={comment} postId={p.postId} refreshFunction={p.refreshFunction}/>
+                            <ReplyComment CommentList={p.CommentList} parentCommentId={comment._id} postId={p.postId} refreshFunction={p.refreshFunction}/>
                     </React.Fragment>
                 )
 

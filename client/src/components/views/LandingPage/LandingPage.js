@@ -14,6 +14,7 @@ function LandingPage() {
     useEffect(() => {
         const endPoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=1`
         fetchMovies(endPoint)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const fetchMovies = (path) => {
