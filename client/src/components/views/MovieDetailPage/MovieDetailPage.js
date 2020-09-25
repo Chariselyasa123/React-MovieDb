@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { API_URL, API_KEY, IMAGE_URL } from '../../Config'
 import Mainimage from '../LandingPage/Section/Mainimage'
-import { Button, Descriptions, Row, Col } from 'antd'
+import { Button, Row, Col, Divider } from 'antd'
 import GridCard from '../LandingPage/Section/GridCard'
 import Favorite from './Sections/Favorite'
 import Comments from './Sections/Comments'
 import Axios from 'axios'
 import LikeDislike from './Sections/LikeDislike'
 import MovieInfo from './Sections/MovieInfo'
+import LoadingPage from '../LoadingPage'
 
 function MovieDetailPage(p) {
 
@@ -48,7 +49,7 @@ function MovieDetailPage(p) {
         fetch(endpoint)
             .then(result => result.json())
             .then(result => {
-                // console.log(result)
+                console.log(result)
                 setMovie(result)
                 setLoadingForMovie(false)
 
@@ -81,63 +82,79 @@ function MovieDetailPage(p) {
 
     return (
         <div>
-            {/* Gambar utama */}
-            {!LoadingForMovie ?
-                <Mainimage 
-                    image={`${IMAGE_URL}w1280${Movie.backdrop_path}`} 
-                    title={Movie.original_title}
-                    text={Movie.overview}
-                />
+            
+            {LoadingForMovie ?
+
+                <LoadingPage />
+
                 :
-                <div>loading...</div>
+
+                <React.Fragment>
+
+                    {/* Gambar Baliho */}
+                    <Mainimage 
+                        image={`${IMAGE_URL}w1280${Movie.backdrop_path}`} 
+                        title={Movie.original_title}
+                        text={Movie.overview}
+                        rating={Movie.vote_average}
+                    />
+
+                    <div style={{ width: '85%', margin: '1rem auto' }}>
+
+                        {/* Like dislike favorite */}
+                        <Row>
+                            <Col span={8}> 
+                            
+                                <LikeDislike movie movieId={movieId} userId={localStorage.getItem('userId')} styleMovie={{ paddingRight: '1rem' }}/> 
+                            
+                            </Col>
+                            <Col span={8} offset={8} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                <Favorite userFrom={localStorage.getItem('userId')} movieId={movieId} movieInfo={Movie}/>
+                            </Col>
+                        </Row>
+
+
+                        {/* Info film dalam table */}
+                        <Divider orientation="left">Movie Info</Divider>
+                        {!LoadingForMovie ?
+                            <MovieInfo movie={Movie} />
+                            :
+                            <div>loading...</div>
+                        }
+
+                        <br/>
+
+                        {/* Tombol nampilin aktor */}
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                            <Button onClick={handleClick}>{Text}</Button>
+                        </div>
+                        <br/>
+
+
+                        {/* Nampilin aktornya */}
+                        {ActorTogle &&
+                            <Row gutter={[16,16]}>
+                                {Crews && Crews.map((cast, index) => (
+                                    <React.Fragment key={index}>
+                                        {cast.profile_path && 
+                                            <GridCard
+                                                actor 
+                                                image={`${IMAGE_URL}w500${cast.profile_path}`}
+                                                name={cast.name}
+                                                character={cast.character}
+                                            />
+                                        }
+                                    </React.Fragment>
+                                ))}
+                            </Row>
+                        }
+
+                        <Comments CommentList={CommentList} postId={movieId} refreshFunction={updateComment}/>
+                    </div>
+                </React.Fragment>
             }
 
-            {/* BODY */}
-            <div style={{ width: '85%', margin: '1rem auto' }}>
-                <Row>
-                    <Col span={8}> 
-                    
-                        <LikeDislike movie movieId={movieId} userId={localStorage.getItem('userId')} styleMovie={{ paddingRight: '1rem' }}/> 
-                    
-                    </Col>
-                    <Col span={8} offset={8} style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <Favorite userFrom={localStorage.getItem('userId')} movieId={movieId} movieInfo={Movie}/>
-                    </Col>
-                </Row>
-
-                {/* Info film dalam table */}
-                {!LoadingForMovie ?
-                    <MovieInfo movie={Movie} />
-                    :
-                    <div>loading...</div>
-                }
-
-                <br/>
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <Button onClick={handleClick}>{Text}</Button>
-                </div>
-                <br/>
-
-                {/* Grid Card Untuk para aktor */}
-                {ActorTogle &&
-                    <Row gutter={[16,16]}>
-                        {Crews && Crews.map((cast, index) => (
-                            <React.Fragment key={index}>
-                                {cast.profile_path && 
-                                    <GridCard
-                                        actor 
-                                        image={`${IMAGE_URL}w500${cast.profile_path}`}
-                                        name={cast.name}
-                                        character={cast.character}
-                                    />
-                                }
-                            </React.Fragment>
-                        ))}
-                    </Row>
-                }
-
-                <Comments CommentList={CommentList} postId={movieId} refreshFunction={updateComment}/>
-            </div>
+            
 
 
         </div>

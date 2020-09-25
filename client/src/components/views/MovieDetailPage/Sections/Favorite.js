@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import { HeartOutlined, HeartFilled } from '@ant-design/icons';
+import { Tooltip } from 'antd';
 
 function Favorite(p) {
 
@@ -66,7 +68,9 @@ function Favorite(p) {
 
     return (
         <div>
-            <button onClick={onClickFavorite}>{Favorited ? "remove from Favorite" : "Add to Favorite"} {FavoriteNumber}</button>
+            <Tooltip key="favorite" title={Favorited ? "Click to remove Favorite" : "Click to add Favorite"}>
+                <a onClick={onClickFavorite} style={{ fontSize: '25px', color: 'red' }}>{React.createElement(Favorited ? HeartFilled : HeartOutlined)}</a>
+            </Tooltip>
         </div>
     )
 }

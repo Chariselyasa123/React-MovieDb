@@ -1,0 +1,42 @@
+.mainImage:after {
+    content:'\A';
+    position:absolute;
+    width:100%; height:100%;
+    top:0; left:0;
+    background:rgba(0,0,0,0.6);
+    opacity:0;
+    transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+}
+
+.mainImage:hover:after {
+    opacity:1;
+}
+
+.gridCard:after, .gridCard:before {
+    position:absolute;
+    opacity:0;
+    transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+}
+.gridCard:after {
+    content:'\A';
+    width:100%; height:100%;
+    top:0; left:0;
+    background:rgba(0,0,0,0.6);
+}
+.gridCard:before {
+    content: attr(data-content);
+    width:100%;
+    color:#fff;
+    z-index:1;
+    bottom:1;
+    padding:4px 10px;
+    text-align:center;
+    background:rgba(0,0,0,0.6);
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+}
+.gridCard:hover:after, .gridCard:hover:before {
+    opacity:1;
+}
