@@ -140,7 +140,7 @@ function MovieDetailPage(p) {
                         {!LoadingForMovie ?
                             <MovieInfo movie={Movie} />
                             :
-                            <div>Samlekom...</div>
+                            <div>Loading...</div>
                         }
 
                         <br/>
