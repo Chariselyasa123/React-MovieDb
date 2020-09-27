@@ -1,14 +1,12 @@
 import React, { useEffect, useState, useRef  } from 'react'
 import { API_URL, API_KEY, IMAGE_URL } from '../../Config'
-import { Typography, Row, Carousel, Input, Col, Space } from 'antd'
-import { FacebookFilled, TwitterCircleFilled, InstagramOutlined, GithubOutlined } from '@ant-design/icons';
+import { Typography, Row, Carousel, Input, Card } from 'antd'
 import Mainimage from './Section/Mainimage'
 import GridCard from './Section/GridCard'
 import styles from './Section/mainImage.module.css'
 import LoadingPage from '../LoadingPage'
+import SearchFilm from './Section/SearchFilm';
 
-
-const { Search } = Input
 const { Title } = Typography
 
 function LandingPage() {
@@ -20,6 +18,39 @@ function LandingPage() {
     const [TopRated, setTopRated] = useState([])
     const [Loading, setLoading] = useState(true)
 
+    const settings = {
+        dots: false,
+        slidesToShow: 4,
+        arrows: true,
+        responsive: [
+            {
+              breakpoint: 1024,
+              settings: {
+                slidesToShow: 3,
+                slidesToScroll: 3,
+                infinite: true,
+                dots: true
+              }
+            },
+            {
+              breakpoint: 600,
+              settings: {
+                slidesToShow: 2,
+                slidesToScroll: 2,
+                initialSlide: 2
+              }
+            },
+            {
+              breakpoint: 480,
+              settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1
+              }
+            }
+          ]
+        
+    };
+    
     useEffect(() => {
         const endPoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=1`
         fetchMovies(endPoint)
@@ -109,50 +140,30 @@ function LandingPage() {
             </Carousel>
                 
             <div style={{ width: '85%', margin: '1rem auto' }}>
-                <Row>
-                    <Col flex="1 1 200px">
-                        <Space size="small">
-                            <a href="https://www.facebook.com/ahmadcharis" target="_blank">
-                                <FacebookFilled style={{ fontSize: '20px', color: 'blue' }}/>
-                            </a>
-                            <a href="https://twitter.com/aceh_charis" target="_blank">
-                                <TwitterCircleFilled style={{ fontSize: '20px', color: '#1DA1F2' }}/>
-                            </a>
-                            <a href="https://www.instagram.com/ahmad_elyasa/" target="_blank">
-                                <InstagramOutlined style={{ fontSize: '20px', borderRadius: '6px', color: '#fff', background: '#d6249f', background: 'radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%)' }}/>
-                            </a>
-                            <a href="https://github.com/Chariselyasa123" target="_blank">
-                                <GithubOutlined style={{ fontSize: '20px', color: "#333" }}/>
-                            </a>
-                        </Space>
-                    </Col>
-                    <Col flex="0 1 350px">
-                        <Search
-                            placeholder="input search text"
-                            enterButton="Search"
-                            size="large"
-                            onSearch={value => console.log(value)}
-                        />
-                    </Col>
-                </Row>
+
+                {/* bagian Pencarian */}
+                <SearchFilm/>
 
                 {/* Movie by TOP RATED */}
                 <Title level={2}> Top Rated </Title>
                 <hr/>
-
-                
-                <Row gutter={[16,16]}>
-                    {TopRated && TopRated.map((topRated, index) => (
-                        <React.Fragment key={index}>
-                            <GridCard
-                                image={topRated.poster_path && `${IMAGE_URL}w500${topRated.poster_path}`}
-                                movieId={topRated.id}
-                                title={topRated.title}
-                                rating={topRated.vote_average}
-                            />
-                        </React.Fragment>
-                    ))}
-                </Row>
+                <Card style={{ backgroundColor: '#f5f3f0' }}>
+                    <Carousel {...settings} autoplay>
+                    {/* <Row gutter={[16,16]}> */}
+                        {TopRated && TopRated.map((topRated, index) => (
+                            <React.Fragment key={index}>
+                                <GridCard
+                                    topRated
+                                    image={topRated.poster_path && `${IMAGE_URL}w500${topRated.poster_path}`}
+                                    movieId={topRated.id}
+                                    title={topRated.title}
+                                    rating={topRated.vote_average}
+                                />
+                            </React.Fragment>
+                        ))}
+                    {/* </Row> */}
+                    </Carousel>
+                </Card>
 
                 {/* Movie by lastets */}
                 <Title level={2}> Movie by lastets</Title>
