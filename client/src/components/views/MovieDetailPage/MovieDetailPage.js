@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { API_URL, API_KEY, IMAGE_URL } from '../../Config'
+import { API_URL, API_KEY, IMAGE_URL, YOUTUBE_URL } from '../../Config'
 import Mainimage from '../LandingPage/Section/Mainimage'
-import { Button, Row, Col, Divider } from 'antd'
+import { Button, Row, Col, Divider, Space } from 'antd'
 import GridCard from '../LandingPage/Section/GridCard'
 import Favorite from './Sections/Favorite'
 import Comments from './Sections/Comments'
@@ -9,6 +9,9 @@ import Axios from 'axios'
 import LikeDislike from './Sections/LikeDislike'
 import MovieInfo from './Sections/MovieInfo'
 import LoadingPage from '../LoadingPage'
+import WatchTrailer from './Sections/WatchTrailer'
+import { Redirect } from "react-router-dom";
+
 
 function MovieDetailPage(p) {
 
@@ -19,6 +22,7 @@ function MovieDetailPage(p) {
     const [CommentList, setCommentList] = useState([])
     const [LoadingForMovie, setLoadingForMovie] = useState(true)
     const [LoadingForCasts, setLoadingForCasts] = useState(true)
+    const [Trailer, setTrailer] = useState([])
     const movieId = p.match.params.movieId
     const movieVariable = {
         movieId: movieId
@@ -40,7 +44,6 @@ function MovieDetailPage(p) {
                     alert('Failed to get comments Info')
                 }
             })
-
         handleClick()
     }, [])
 
@@ -57,11 +60,25 @@ function MovieDetailPage(p) {
                 fetch(endpointForCasts)
                     .then(result => result.json())
                     .then(result => {
-                        // console.log(result)
+                        // console.log(result.cast)
                         setCrews(result.cast)
                     })
-
                 setLoadingForCasts(false)
+
+                let endpointForTriler = `${API_URL}movie/${movieId}/videos?api_key=${API_KEY}&language=en-US`;
+                fetch(endpointForTriler)
+                    .then(result => result.json())
+                    .then(result => {
+                        // const keyword = "OFFICIAL TRAILER"
+                        // const filtered = result.results.filter(entry => Object.values(entry).some(val => typeof val === "string" && val.includes(keyword, "Official Trailer")));
+                        const triler = result.results.filter(type => type.type === "Trailer" )
+                        const key = triler.map((val,index) => {
+                            return(val.key);
+                        })
+                        setTrailer(key)
+                        // console.log(key);
+                        console.log(result);
+                    })
             })
             .catch(error => console.error('Error:', error)
             )
@@ -79,6 +96,7 @@ function MovieDetailPage(p) {
     const updateComment = (newComment) => {
         setCommentList(CommentList.concat(newComment))
     }
+
 
     return (
         <div>
@@ -109,7 +127,10 @@ function MovieDetailPage(p) {
                             
                             </Col>
                             <Col span={8} offset={8} style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                <Favorite userFrom={localStorage.getItem('userId')} movieId={movieId} movieInfo={Movie}/>
+                                <Space size="middle">
+                                    <WatchTrailer link={`${YOUTUBE_URL}${Trailer[0]}?autoplay=1`}/>
+                                    <Favorite userFrom={localStorage.getItem('userId')} movieId={movieId} movieInfo={Movie}/>
+                                </Space>
                             </Col>
                         </Row>
 
@@ -156,7 +177,7 @@ function MovieDetailPage(p) {
 
             
 
-
+        
         </div>
     )
 }

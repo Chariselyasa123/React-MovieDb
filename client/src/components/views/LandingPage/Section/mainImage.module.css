@@ -40,3 +40,18 @@
 .gridCard:hover:after, .gridCard:hover:before {
     opacity:1;
 }
+
+.warper{
+    max-height: 120px;
+    border: 1px solid #ddd;
+    display: flex;
+    overflow-x: auto;
+}
+
+.warper .item {
+    min-width: 110px;
+    height: 110px;
+    line-height: 110px;
+    text-align: center;
+    background-color: #ddd;
+}

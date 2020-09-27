@@ -14,6 +14,8 @@ import FavoritePage from './views/FavoritePage/FavoritePage'
 //true   only logged in user can go inside
 //false  logged in user can't go inside
 
+
+
 function App() {
   return (
     <Suspense fallback={(<div>Loading...</div>)}>
